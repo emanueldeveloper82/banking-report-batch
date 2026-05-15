@@ -6,6 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: emanueldeveloper82/banking-report-batch
     backstage.io/techdocs-ref: dir:.
+    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production

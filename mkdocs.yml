@@ -1,0 +1,3 @@
+site_name: banking-report-batch
+plugins:
+  - techdocs-core

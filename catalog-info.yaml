@@ -7,7 +7,7 @@ metadata:
     github.com/project-slug: emanueldeveloper82/banking-report-batch
     backstage.io/techdocs-ref: dir:.
 spec:
-  type: service
+  type: badground-job
   lifecycle: production
   owner: group:conta-corrente
   domain: financeiro

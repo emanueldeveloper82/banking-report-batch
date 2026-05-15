@@ -13,3 +13,4 @@ spec:
   owner: group:conta-corrente 
   # CONEXÃO: Aponta para o domínio financeiro
   domain: financeiro
+  system: system:banking-system

@@ -6,12 +6,25 @@ metadata:
   annotations:
     github.com/project-slug: emanueldeveloper82/banking-report-batch
     backstage.io/techdocs-ref: dir:.
-    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production
-  # CONEXÃO: Aponta para o grupo que você criou no central
-  owner: group:conta-corrente 
-  # CONEXÃO: Aponta para o domínio financeiro
+  owner: group:conta-corrente
   domain: financeiro
   system: system:banking-system
+  providesApis:
+    - banking-report-batch-api
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: banking-report-batch-api
+  description: "Especificação OpenAPI do Banking Report Batch"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:conta-corrente
+  system: system:banking-system
+  definition:
+    $text: ./openapi.yaml

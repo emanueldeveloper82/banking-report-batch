@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+  title: Banking Report Batch API
+  description: API de processamento em lote de relatórios bancários
+  version: 1.0.0
+  contact:
+    name: Equipe Conta Corrente
+    email: conta-corrente@zetra-bank.com
+
+servers:
+  - url: https://api.zetra-bank.com/reports
+    description: Production
+
+paths:
+  /reports/generate:
+    post:
+      summary: Gerar novo relatório
+      operationId: generateReport
+      tags:
+        - Reports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reportType:
+                  type: string
+                  enum: [MONTHLY, QUARTERLY, ANNUAL, CUSTOM]
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                accountIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Relatório criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reportId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [QUEUED, PROCESSING, COMPLETED, FAILED]
+
+  /reports/{reportId}:
+    get:
+      summary: Consultar status de um relatório
+      operationId: getReportStatus
+      tags:
+        - Reports
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status do relatório
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reportId:
+                    type: string
+                  status:
+                    type: string
+                  progress:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  createdAt:
+                    type: string
+                    format: date-time
+                  completedAt:
+                    type: string
+                    format: date-time
+
+  /reports:
+    get:
+      summary: Listar todos os relatórios
+      operationId: listReports
+      tags:
+        - Reports
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista de relatórios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    reportId:
+                      type: string
+                    reportType:
+                      type: string
+                    status:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+
+  /reports/{reportId}/download:
+    get:
+      summary: Baixar relatório gerado
+      operationId: downloadReport
+      tags:
+        - Reports
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [PDF, CSV, EXCEL]
+            default: PDF
+      responses:
+        '200':
+          description: Arquivo do relatório
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                type: string
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
